@@ -189,7 +189,7 @@ class FisAgent(AriesAgent):
         
         # Prueba para saber si pertenece a la facultad
         
-        Facultad = 111;
+        Codigo = 201810929;
         
         if aip == 10:
             req_attrs = [
@@ -198,7 +198,7 @@ class FisAgent(AriesAgent):
                     "restrictions": [{"schema_name": "credencial schema"}],
                 },
                 {
-                    "name": "facultad",
+                    "name": "codigo",
                     "restrictions": [{"schema_name": "credencial schema"}],
                 },
             ]
