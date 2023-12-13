@@ -190,26 +190,26 @@ class FisAgent(AriesAgent):
             req_attrs = [
                 {
                     "name": "name",
-                    "restrictions": [{"schema_name": "degree schema"}],
+                    "restrictions": [{"schema_name": "credencial schema"}],
                 },
                 {
                     "name": "date",
-                    "restrictions": [{"schema_name": "degree schema"}],
+                    "restrictions": [{"schema_name": "credencial schema"}],
                 },
             ]
             if revocation:
                 req_attrs.append(
                     {
-                        "name": "degree",
-                        "restrictions": [{"schema_name": "degree schema"}],
+                        "name": "credencial",
+                        "restrictions": [{"schema_name": "credencial schema"}],
                         "non_revoked": {"to": int(time.time() - 1)},
                     },
                 )
             else:
                 req_attrs.append(
                     {
-                        "name": "degree",
-                        "restrictions": [{"schema_name": "degree schema"}],
+                        "name": "credencial",
+                        "restrictions": [{"schema_name": "credencial schema"}],
                     }
                 )
             if SELF_ATTESTED:
@@ -223,7 +223,7 @@ class FisAgent(AriesAgent):
                     "name": "birthdate_dateint",
                     "p_type": "<=",
                     "p_value": int(birth_date.strftime(birth_date_format)),
-                    "restrictions": [{"schema_name": "degree schema"}],
+                    "restrictions": [{"schema_name": "credencial schema"}],
                 }
             ]
             indy_proof_request = {
@@ -253,26 +253,26 @@ class FisAgent(AriesAgent):
                 req_attrs = [
                     {
                         "name": "name",
-                        "restrictions": [{"schema_name": "degree schema"}],
+                        "restrictions": [{"schema_name": "credencial schema"}],
                     },
                     {
                         "name": "date",
-                        "restrictions": [{"schema_name": "degree schema"}],
+                        "restrictions": [{"schema_name": "credencial schema"}],
                     },
                 ]
                 if revocation:
                     req_attrs.append(
                         {
-                            "name": "degree",
-                            "restrictions": [{"schema_name": "degree schema"}],
+                            "name": "credencial",
+                            "restrictions": [{"schema_name": "credencial schema"}],
                             "non_revoked": {"to": int(time.time() - 1)},
                         },
                     )
                 else:
                     req_attrs.append(
                         {
-                            "name": "degree",
-                            "restrictions": [{"schema_name": "degree schema"}],
+                            "name": "credencial",
+                            "restrictions": [{"schema_name": "credencial schema"}],
                         }
                     )
                 if SELF_ATTESTED:
@@ -286,7 +286,7 @@ class FisAgent(AriesAgent):
                         "name": "birthdate_dateint",
                         "p_type": "<=",
                         "p_value": int(birth_date.strftime(birth_date_format)),
-                        "restrictions": [{"schema_name": "degree schema"}],
+                        "restrictions": [{"schema_name": "credencial schema"}],
                     }
                 ]
                 indy_proof_request = {
@@ -381,66 +381,66 @@ class FisAgent(AriesAgent):
 
 
 async def main(args):
-    faber_agent = await create_agent_with_args(args, ident="faber")
+    fis_agent = await create_agent_with_args(args, ident="fis")
 
     try:
         log_status(
             "#1 Provision an agent and wallet, get back configuration details"
             + (
-                f" (Wallet type: {faber_agent.wallet_type})"
-                if faber_agent.wallet_type
+                f" (Wallet type: {fis_agent.wallet_type})"
+                if fis_agent.wallet_type
                 else ""
             )
         )
-        agent = FaberAgent(
-            "faber.agent",
-            faber_agent.start_port,
-            faber_agent.start_port + 1,
-            genesis_data=faber_agent.genesis_txns,
-            genesis_txn_list=faber_agent.genesis_txn_list,
-            no_auto=faber_agent.no_auto,
-            tails_server_base_url=faber_agent.tails_server_base_url,
-            revocation=faber_agent.revocation,
-            timing=faber_agent.show_timing,
-            multitenant=faber_agent.multitenant,
-            mediation=faber_agent.mediation,
-            wallet_type=faber_agent.wallet_type,
-            seed=faber_agent.seed,
-            aip=faber_agent.aip,
-            endorser_role=faber_agent.endorser_role,
-            anoncreds_legacy_revocation=faber_agent.anoncreds_legacy_revocation,
-            log_file=faber_agent.log_file,
-            log_config=faber_agent.log_config,
-            log_level=faber_agent.log_level,
+        agent = FisAgent(
+            "fis.agent",
+            fis_agent.start_port,
+            fis_agent.start_port + 1,
+            genesis_data=fis_agent.genesis_txns,
+            genesis_txn_list=fis_agent.genesis_txn_list,
+            no_auto=fis_agent.no_auto,
+            tails_server_base_url=fis_agent.tails_server_base_url,
+            revocation=fis_agent.revocation,
+            timing=fis_agent.show_timing,
+            multitenant=fis_agent.multitenant,
+            mediation=fis_agent.mediation,
+            wallet_type=fis_agent.wallet_type,
+            seed=fis_agent.seed,
+            aip=fis_agent.aip,
+            endorser_role=fis_agent.endorser_role,
+            anoncreds_legacy_revocation=fis_agent.anoncreds_legacy_revocation,
+            log_file=fis_agent.log_file,
+            log_config=fis_agent.log_config,
+            log_level=fis_agent.log_level,
         )
 
-        faber_schema_name = "degree schema"
-        faber_schema_attrs = [
+        fis_schema_name = "credencial schema"
+        fis_schema_attrs = [
             "name",
             "codigo",
             "ci",
             "facultad",
             "timestamp",
         ]
-        if faber_agent.cred_type == CRED_FORMAT_INDY:
-            faber_agent.public_did = True
-            await faber_agent.initialize(
+        if fis_agent.cred_type == CRED_FORMAT_INDY:
+            fis_agent.public_did = True
+            await fis_agent.initialize(
                 the_agent=agent,
                 schema_name=faber_schema_name,
                 schema_attrs=faber_schema_attrs,
-                create_endorser_agent=(faber_agent.endorser_role == "author")
-                if faber_agent.endorser_role
+                create_endorser_agent=(fis_agent.endorser_role == "author")
+                if fis_agent.endorser_role
                 else False,
             )
-        elif faber_agent.cred_type == CRED_FORMAT_JSON_LD:
-            faber_agent.public_did = True
-            await faber_agent.initialize(the_agent=agent)
+        elif fis_agent.cred_type == CRED_FORMAT_JSON_LD:
+            fis_agent.public_did = True
+            await fis_agent.initialize(the_agent=agent)
         else:
-            raise Exception("Invalid credential type:" + faber_agent.cred_type)
+            raise Exception("Invalid credential type:" + fis_agent.cred_type)
 
         # generate an invitation for Alice
-        await faber_agent.generate_invitation(
-            display_qr=True, reuse_connections=faber_agent.reuse_connections, wait=True
+        await fis_agent.generate_invitation(
+            display_qr=True, reuse_connections=fis_agent.reuse_connections, wait=True
         )
 
         exchange_tracing = False
@@ -451,21 +451,21 @@ async def main(args):
             "    (3) Send Message\n"
             "    (4) Create New Invitation\n"
         )
-        if faber_agent.revocation:
+        if fis_agent.revocation:
             options += (
                 "    (5) Revoke Credential\n"
                 "    (6) Publish Revocations\n"
                 "    (7) Rotate Revocation Registry\n"
                 "    (8) List Revocation Registries\n"
             )
-        if faber_agent.endorser_role and faber_agent.endorser_role == "author":
+        if fis_agent.endorser_role and fis_agent.endorser_role == "author":
             options += "    (D) Set Endorser's DID\n"
-        if faber_agent.multitenant:
+        if fis_agent.multitenant:
             options += "    (W) Create and/or Enable Wallet\n"
         options += "    (T) Toggle tracing on credential/proof exchange\n"
         options += "    (X) Exit?\n[1/2/3/4/{}{}T/X] ".format(
-            "5/6/7/8/" if faber_agent.revocation else "",
-            "W/" if faber_agent.multitenant else "",
+            "5/6/7/8/" if fis_agent.revocation else "",
+            "W/" if fis_agent.multitenant else "",
         )
         async for option in prompt_loop(options):
             if option is not None:
@@ -474,41 +474,41 @@ async def main(args):
             if option is None or option in "xX":
                 break
 
-            elif option in "dD" and faber_agent.endorser_role:
+            elif option in "dD" and fis_agent.endorser_role:
                 endorser_did = await prompt("Enter Endorser's DID: ")
-                await faber_agent.agent.admin_POST(
-                    f"/transactions/{faber_agent.agent.connection_id}/set-endorser-info",
+                await fis_agent.agent.admin_POST(
+                    f"/transactions/{fis_agent.agent.connection_id}/set-endorser-info",
                     params={"endorser_did": endorser_did},
                 )
 
-            elif option in "wW" and faber_agent.multitenant:
+            elif option in "wW" and fis_agent.multitenant:
                 target_wallet_name = await prompt("Enter wallet name: ")
                 include_subwallet_webhook = await prompt(
                     "(Y/N) Create sub-wallet webhook target: "
                 )
                 if include_subwallet_webhook.lower() == "y":
-                    created = await faber_agent.agent.register_or_switch_wallet(
+                    created = await fis_agent.agent.register_or_switch_wallet(
                         target_wallet_name,
-                        webhook_port=faber_agent.agent.get_new_webhook_port(),
+                        webhook_port=fis_agent.agent.get_new_webhook_port(),
                         public_did=True,
-                        mediator_agent=faber_agent.mediator_agent,
-                        endorser_agent=faber_agent.endorser_agent,
-                        taa_accept=faber_agent.taa_accept,
+                        mediator_agent=fis_agent.mediator_agent,
+                        endorser_agent=fis_agent.endorser_agent,
+                        taa_accept=fis_agent.taa_accept,
                     )
                 else:
-                    created = await faber_agent.agent.register_or_switch_wallet(
+                    created = await fis_agent.agent.register_or_switch_wallet(
                         target_wallet_name,
                         public_did=True,
-                        mediator_agent=faber_agent.mediator_agent,
-                        endorser_agent=faber_agent.endorser_agent,
-                        cred_type=faber_agent.cred_type,
-                        taa_accept=faber_agent.taa_accept,
+                        mediator_agent=fis_agent.mediator_agent,
+                        endorser_agent=fis_agent.endorser_agent,
+                        cred_type=fis_agent.cred_type,
+                        taa_accept=fis_agent.taa_accept,
                     )
                 # create a schema and cred def for the new wallet
                 # TODO check first in case we are switching between existing wallets
                 if created:
                     # TODO this fails because the new wallet doesn't get a public DID
-                    await faber_agent.create_schema_and_cred_def(
+                    await fis_agent.create_schema_and_cred_def(
                         schema_name=faber_schema_name,
                         schema_attrs=faber_schema_attrs,
                     )
@@ -524,83 +524,83 @@ async def main(args):
             elif option == "1":
                 log_status("#13 Issue credential offer to X")
 
-                if faber_agent.aip == 10:
-                    offer_request = faber_agent.agent.generate_credential_offer(
-                        faber_agent.aip, None, faber_agent.cred_def_id, exchange_tracing
+                if fis_agent.aip == 10:
+                    offer_request = fis_agent.agent.generate_credential_offer(
+                        fis_agent.aip, None, fis_agent.cred_def_id, exchange_tracing
                     )
-                    await faber_agent.agent.admin_POST(
+                    await fis_agent.agent.admin_POST(
                         "/issue-credential/send-offer", offer_request
                     )
 
-                elif faber_agent.aip == 20:
-                    if faber_agent.cred_type == CRED_FORMAT_INDY:
-                        offer_request = faber_agent.agent.generate_credential_offer(
-                            faber_agent.aip,
-                            faber_agent.cred_type,
-                            faber_agent.cred_def_id,
+                elif fis_agent.aip == 20:
+                    if fis_agent.cred_type == CRED_FORMAT_INDY:
+                        offer_request = fis_agent.agent.generate_credential_offer(
+                            fis_agent.aip,
+                            fis_agent.cred_type,
+                            fis_agent.cred_def_id,
                             exchange_tracing,
                         )
 
-                    elif faber_agent.cred_type == CRED_FORMAT_JSON_LD:
-                        offer_request = faber_agent.agent.generate_credential_offer(
-                            faber_agent.aip,
-                            faber_agent.cred_type,
+                    elif fis_agent.cred_type == CRED_FORMAT_JSON_LD:
+                        offer_request = fis_agent.agent.generate_credential_offer(
+                            fis_agent.aip,
+                            fis_agent.cred_type,
                             None,
                             exchange_tracing,
                         )
 
                     else:
                         raise Exception(
-                            f"Error invalid credential type: {faber_agent.cred_type}"
+                            f"Error invalid credential type: {fis_agent.cred_type}"
                         )
 
-                    await faber_agent.agent.admin_POST(
+                    await fis_agent.agent.admin_POST(
                         "/issue-credential-2.0/send-offer", offer_request
                     )
 
                 else:
-                    raise Exception(f"Error invalid AIP level: {faber_agent.aip}")
+                    raise Exception(f"Error invalid AIP level: {fis_agent.aip}")
 
             elif option == "2":
-                log_status("#20 Request proof of degree from alice")
-                if faber_agent.aip == 10:
+                log_status("#20 Request proof of redencial from alice")
+                if fis_agent.aip == 10:
                     proof_request_web_request = (
-                        faber_agent.agent.generate_proof_request_web_request(
-                            faber_agent.aip,
-                            faber_agent.cred_type,
-                            faber_agent.revocation,
+                        fis_agent.agent.generate_proof_request_web_request(
+                            fis_agent.aip,
+                            fis_agent.cred_type,
+                            fis_agent.revocation,
                             exchange_tracing,
                         )
                     )
-                    await faber_agent.agent.admin_POST(
+                    await fis_agent.agent.admin_POST(
                         "/present-proof/send-request", proof_request_web_request
                     )
                     pass
 
-                elif faber_agent.aip == 20:
-                    if faber_agent.cred_type == CRED_FORMAT_INDY:
+                elif fis_agent.aip == 20:
+                    if fis_agent.cred_type == CRED_FORMAT_INDY:
                         proof_request_web_request = (
-                            faber_agent.agent.generate_proof_request_web_request(
-                                faber_agent.aip,
-                                faber_agent.cred_type,
-                                faber_agent.revocation,
+                            fis_agent.agent.generate_proof_request_web_request(
+                                fis_agent.aip,
+                                fis_agent.cred_type,
+                                fis_agent.revocation,
                                 exchange_tracing,
                             )
                         )
 
-                    elif faber_agent.cred_type == CRED_FORMAT_JSON_LD:
+                    elif fis_agent.cred_type == CRED_FORMAT_JSON_LD:
                         proof_request_web_request = (
-                            faber_agent.agent.generate_proof_request_web_request(
-                                faber_agent.aip,
-                                faber_agent.cred_type,
-                                faber_agent.revocation,
+                            fis_agent.agent.generate_proof_request_web_request(
+                                fis_agent.aip,
+                                fis_agent.cred_type,
+                                fis_agent.revocation,
                                 exchange_tracing,
                             )
                         )
 
                     else:
                         raise Exception(
-                            "Error invalid credential type:" + faber_agent.cred_type
+                            "Error invalid credential type:" + fis_agent.cred_type
                         )
 
                     await agent.admin_POST(
@@ -608,21 +608,21 @@ async def main(args):
                     )
 
                 else:
-                    raise Exception(f"Error invalid AIP level: {faber_agent.aip}")
+                    raise Exception(f"Error invalid AIP level: {fis_agent.aip}")
 
             elif option == "2a":
-                log_status("#20 Request * Connectionless * proof of degree from alice")
-                if faber_agent.aip == 10:
+                log_status("#20 Request * Connectionless * proof of credencial from alice")
+                if fis_agent.aip == 10:
                     proof_request_web_request = (
-                        faber_agent.agent.generate_proof_request_web_request(
-                            faber_agent.aip,
-                            faber_agent.cred_type,
-                            faber_agent.revocation,
+                        fis_agent.agent.generate_proof_request_web_request(
+                            fis_agent.aip,
+                            fis_agent.cred_type,
+                            fis_agent.revocation,
                             exchange_tracing,
                             connectionless=True,
                         )
                     )
-                    proof_request = await faber_agent.agent.admin_POST(
+                    proof_request = await fis_agent.agent.admin_POST(
                         "/present-proof/create-request", proof_request_web_request
                     )
                     pres_req_id = proof_request["presentation_exchange_id"]
@@ -631,7 +631,7 @@ async def main(args):
                         or (
                             "http://"
                             + os.getenv("DOCKERHOST").replace(
-                                "{PORT}", str(faber_agent.agent.admin_port + 1)
+                                "{PORT}", str(fis_agent.agent.admin_port + 1)
                             )
                             + "/webhooks"
                         )
@@ -644,40 +644,40 @@ async def main(args):
                     )
                     qr.print_ascii(invert=True)
 
-                elif faber_agent.aip == 20:
-                    if faber_agent.cred_type == CRED_FORMAT_INDY:
+                elif fis_agent.aip == 20:
+                    if fis_agent.cred_type == CRED_FORMAT_INDY:
                         proof_request_web_request = (
-                            faber_agent.agent.generate_proof_request_web_request(
-                                faber_agent.aip,
-                                faber_agent.cred_type,
-                                faber_agent.revocation,
+                            fis_agent.agent.generate_proof_request_web_request(
+                                fis_agent.aip,
+                                fis_agent.cred_type,
+                                fis_agent.revocation,
                                 exchange_tracing,
                                 connectionless=True,
                             )
                         )
-                    elif faber_agent.cred_type == CRED_FORMAT_JSON_LD:
+                    elif fis_agent.cred_type == CRED_FORMAT_JSON_LD:
                         proof_request_web_request = (
-                            faber_agent.agent.generate_proof_request_web_request(
-                                faber_agent.aip,
-                                faber_agent.cred_type,
-                                faber_agent.revocation,
+                            fis_agent.agent.generate_proof_request_web_request(
+                                fis_agent.aip,
+                                fis_agent.cred_type,
+                                fis_agent.revocation,
                                 exchange_tracing,
                                 connectionless=True,
                             )
                         )
                     else:
                         raise Exception(
-                            "Error invalid credential type:" + faber_agent.cred_type
+                            "Error invalid credential type:" + fis_agent.cred_type
                         )
 
-                    proof_request = await faber_agent.agent.admin_POST(
+                    proof_request = await fis_agent.agent.admin_POST(
                         "/present-proof-2.0/create-request", proof_request_web_request
                     )
                     pres_req_id = proof_request["pres_ex_id"]
                     url = (
                         "http://"
                         + os.getenv("DOCKERHOST").replace(
-                            "{PORT}", str(faber_agent.agent.admin_port + 1)
+                            "{PORT}", str(fis_agent.agent.admin_port + 1)
                         )
                         + "/webhooks/pres_req/"
                         + pres_req_id
@@ -691,12 +691,12 @@ async def main(args):
                     )
                     qr.print_ascii(invert=True)
                 else:
-                    raise Exception(f"Error invalid AIP level: {faber_agent.aip}")
+                    raise Exception(f"Error invalid AIP level: {fis_agent.aip}")
 
             elif option == "3":
                 msg = await prompt("Enter message: ")
-                await faber_agent.agent.admin_POST(
-                    f"/connections/{faber_agent.agent.connection_id}/send-message",
+                await fis_agent.agent.admin_POST(
+                    f"/connections/{fis_agent.agent.connection_id}/send-message",
                     {"content": msg},
                 )
 
@@ -705,26 +705,26 @@ async def main(args):
                     "Creating a new invitation, please receive "
                     "and accept this invitation using Alice agent"
                 )
-                await faber_agent.generate_invitation(
+                await fis_agent.generate_invitation(
                     display_qr=True,
-                    reuse_connections=faber_agent.reuse_connections,
+                    reuse_connections=fis_agent.reuse_connections,
                     wait=True,
                 )
 
-            elif option == "5" and faber_agent.revocation:
+            elif option == "5" and fis_agent.revocation:
                 rev_reg_id = (await prompt("Enter revocation registry ID: ")).strip()
                 cred_rev_id = (await prompt("Enter credential revocation ID: ")).strip()
                 publish = (
                     await prompt("Publish now? [Y/N]: ", default="N")
                 ).strip() in "yY"
                 try:
-                    await faber_agent.agent.admin_POST(
+                    await fis_agent.agent.admin_POST(
                         "/revocation/revoke",
                         {
                             "rev_reg_id": rev_reg_id,
                             "cred_rev_id": cred_rev_id,
                             "publish": publish,
-                            "connection_id": faber_agent.agent.connection_id,
+                            "connection_id": fis_agent.agent.connection_id,
                             # leave out thread_id, let aca-py generate
                             # "thread_id": "12345678-4444-4444-4444-123456789012",
                             "comment": "Revocation reason goes here ...",
@@ -733,12 +733,12 @@ async def main(args):
                 except ClientError:
                     pass
 
-            elif option == "6" and faber_agent.revocation:
+            elif option == "6" and fis_agent.revocation:
                 try:
-                    resp = await faber_agent.agent.admin_POST(
+                    resp = await fis_agent.agent.admin_POST(
                         "/revocation/publish-revocations", {}
                     )
-                    faber_agent.agent.log(
+                    fis_agent.agent.log(
                         "Published revocations for {} revocation registr{} {}".format(
                             len(resp["rrid2crid"]),
                             "y" if len(resp["rrid2crid"]) == 1 else "ies",
@@ -747,21 +747,21 @@ async def main(args):
                     )
                 except ClientError:
                     pass
-            elif option == "7" and faber_agent.revocation:
+            elif option == "7" and fis_agent.revocation:
                 try:
-                    resp = await faber_agent.agent.admin_POST(
-                        f"/revocation/active-registry/{faber_agent.cred_def_id}/rotate",
+                    resp = await fis_agent.agent.admin_POST(
+                        f"/revocation/active-registry/{fis_agent.cred_def_id}/rotate",
                         {},
                     )
-                    faber_agent.agent.log(
+                    fis_agent.agent.log(
                         "Rotated registries for {}. Decommissioned Registries: {}".format(
-                            faber_agent.cred_def_id,
+                            fis_agent.cred_def_id,
                             json.dumps([r for r in resp["rev_reg_ids"]], indent=4),
                         )
                     )
                 except ClientError:
                     pass
-            elif option == "8" and faber_agent.revocation:
+            elif option == "8" and fis_agent.revocation:
                 states = [
                     "init",
                     "generated",
@@ -779,11 +779,11 @@ async def main(args):
                 if state not in states:
                     state = "active"
                 try:
-                    resp = await faber_agent.agent.admin_GET(
+                    resp = await fis_agent.agent.admin_GET(
                         "/revocation/registries/created",
                         params={"state": state},
                     )
-                    faber_agent.agent.log(
+                    fis_agent.agent.log(
                         "Registries (state = '{}'): {}".format(
                             state,
                             json.dumps([r for r in resp["rev_reg_ids"]], indent=4),
@@ -792,14 +792,14 @@ async def main(args):
                 except ClientError:
                     pass
 
-        if faber_agent.show_timing:
-            timing = await faber_agent.agent.fetch_timing()
+        if fis_agent.show_timing:
+            timing = await fis_agent.agent.fetch_timing()
             if timing:
-                for line in faber_agent.agent.format_timing(timing):
+                for line in fis_agent.agent.format_timing(timing):
                     log_msg(line)
 
     finally:
-        terminated = await faber_agent.terminate()
+        terminated = await fis_agent.terminate()
 
     await asyncio.sleep(0.1)
 
