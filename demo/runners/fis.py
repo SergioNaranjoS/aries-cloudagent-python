@@ -426,8 +426,8 @@ async def main(args):
             fis_agent.public_did = True
             await fis_agent.initialize(
                 the_agent=agent,
-                schema_name=faber_schema_name,
-                schema_attrs=faber_schema_attrs,
+                schema_name=fis_schema_name,
+                schema_attrs=fis_schema_attrs,
                 create_endorser_agent=(fis_agent.endorser_role == "author")
                 if fis_agent.endorser_role
                 else False,
@@ -509,8 +509,8 @@ async def main(args):
                 if created:
                     # TODO this fails because the new wallet doesn't get a public DID
                     await fis_agent.create_schema_and_cred_def(
-                        schema_name=faber_schema_name,
-                        schema_attrs=faber_schema_attrs,
+                        schema_name=fis_schema_name,
+                        schema_attrs=fis_schema_attrs,
                     )
 
             elif option in "tT":
@@ -808,7 +808,7 @@ async def main(args):
 
 
 if __name__ == "__main__":
-    parser = arg_parser(ident="faber", port=8020)
+    parser = arg_parser(ident="fis", port=8020)
     args = parser.parse_args()
 
     ENABLE_PYDEVD_PYCHARM = os.getenv("ENABLE_PYDEVD_PYCHARM", "").lower()
@@ -826,7 +826,7 @@ if __name__ == "__main__":
             import pydevd_pycharm
 
             print(
-                "Faber remote debugging to "
+                "Fis remote debugging to "
                 f"{PYDEVD_PYCHARM_HOST}:{PYDEVD_PYCHARM_CONTROLLER_PORT}"
             )
             pydevd_pycharm.settrace(
