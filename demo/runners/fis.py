@@ -182,10 +182,15 @@ class FisAgent(AriesAgent):
     def generate_proof_request_web_request(
         self, aip, cred_type, revocation, exchange_tracing, connectionless=False
     ):
-        age = 18
-        d = datetime.date.today()
-        birth_date = datetime.date(d.year - age, d.month, d.day)
-        birth_date_format = "%Y%m%d"
+        # age = 18
+        # d = datetime.date.today()
+        # birth_date = datetime.date(d.year - age, d.month, d.day)
+        # birth_date_format = "%Y%m%d"
+        
+        # Prueba para saber si pertenece a la facultad
+        
+        Facultad = "FIS"
+         
         if aip == 10:
             req_attrs = [
                 {
@@ -193,7 +198,7 @@ class FisAgent(AriesAgent):
                     "restrictions": [{"schema_name": "credencial schema"}],
                 },
                 {
-                    "name": "date",
+                    "name": "facultad",
                     "restrictions": [{"schema_name": "credencial schema"}],
                 },
             ]
@@ -220,14 +225,14 @@ class FisAgent(AriesAgent):
             req_preds = [
                 # test zero-knowledge proofs
                 {
-                    "name": "birthdate_dateint",
-                    "p_type": "<=",
-                    "p_value": int(birth_date.strftime(birth_date_format)),
+                    "name": "facultad_string",
+                    "p_type": "==",
+                    "p_value": Facultad,
                     "restrictions": [{"schema_name": "credencial schema"}],
                 }
             ]
             indy_proof_request = {
-                "name": "Proof of Education",
+                "name": "Proof of Facultad",
                 "version": "1.0",
                 "requested_attributes": {
                     f"0_{req_attr['name']}_uuid": req_attr for req_attr in req_attrs
@@ -256,7 +261,7 @@ class FisAgent(AriesAgent):
                         "restrictions": [{"schema_name": "credencial schema"}],
                     },
                     {
-                        "name": "date",
+                        "name": "facultad",
                         "restrictions": [{"schema_name": "credencial schema"}],
                     },
                 ]
@@ -283,14 +288,14 @@ class FisAgent(AriesAgent):
                 req_preds = [
                     # test zero-knowledge proofs
                     {
-                        "name": "birthdate_dateint",
-                        "p_type": "<=",
-                        "p_value": int(birth_date.strftime(birth_date_format)),
+                        "name": "facultad_string",
+                        "p_type": "==",
+                        "p_value": Facultad,
                         "restrictions": [{"schema_name": "credencial schema"}],
                     }
                 ]
                 indy_proof_request = {
-                    "name": "Proof of Education",
+                    "name": "Proof of Facultad",
                     "version": "1.0",
                     "requested_attributes": {
                         f"0_{req_attr['name']}_uuid": req_attr for req_attr in req_attrs
@@ -562,7 +567,7 @@ async def main(args):
                     raise Exception(f"Error invalid AIP level: {fis_agent.aip}")
 
             elif option == "2":
-                log_status("#20 Request proof of redencial from alice")
+                log_status("#20 Request proof of credencial from alice")
                 if fis_agent.aip == 10:
                     proof_request_web_request = (
                         fis_agent.agent.generate_proof_request_web_request(
