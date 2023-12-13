@@ -189,8 +189,8 @@ class FisAgent(AriesAgent):
         
         # Prueba para saber si pertenece a la facultad
         
-        Facultad = "FIS"
-         
+        Facultad = 111;
+        
         if aip == 10:
             req_attrs = [
                 {
@@ -225,7 +225,7 @@ class FisAgent(AriesAgent):
             req_preds = [
                 # test zero-knowledge proofs
                 {
-                    "name": "facultad_string",
+                    "name": "facultad_int",
                     "p_type": "==",
                     "p_value": Facultad,
                     "restrictions": [{"schema_name": "credencial schema"}],
